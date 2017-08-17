@@ -1,7 +1,8 @@
 * {
 	background-color: #FDFDE9;
-	color: white;
-	font-style: bold;
+	color: #776e65;
+	font-family: Ubuntu;
+	font-weight: bold;
 }
 
 .gameboard {
@@ -27,4 +28,59 @@
 	text-align: center;
 	font-size: 35px;
 	background-color: grey;
+}
+
+.game-score::before {
+	content: 'SCORE ';
+}
+
+.best-score::before {
+	content: 'BEST ';
+}
+
+/*Cells color by value*/
+.cell-0 {
+
+}
+.cell-2 {
+	background: #eee4da;
+}
+.cell-4 {
+	background: #ede0c8;
+}
+.cell-8 {
+	color: #f9f6f2;
+	background: #f2b179;
+}
+.cell-16 {
+	color: #f9f6f2;
+	background: #f59563;
+}
+.cell-32 {
+	color: #f9f6f2;
+	background: #f67c5f;
+}
+.cell-64 {
+	color: #f9f6f2;
+	background: #f65e3b;
+}
+.cell-128 {
+	color: #f9f6f2;
+	background: #edcf72;
+}
+.cell-256 {
+	color: #f9f6f2;
+	background: #edcc61;
+}
+.cell-512 {
+	color: #f9f6f2;
+	background: #edc850;
+}
+.cell-1024 {
+	color: #f9f6f2;
+	background: #edc53f;
+}
+.cell-2048 {
+	color: #f9f6f2;
+	background: #edc22e;
 }
