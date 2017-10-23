@@ -144,7 +144,7 @@
 		function resetTimer() {
 			clearInterval(timer);
 			counter = 0;
-			$('.game-timer').text('Time 0 : 0');
+			$('.game-timer').text('Time 00 : 00');
 			timerIsOn = false;
 		}
 
