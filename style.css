@@ -1,5 +1,5 @@
-* {
-	background-color: #FDFDE9;
+body {
+	background-image: url('background.jpg');
 	color: #776e65;
 	font-family: Ubuntu;
 	font-weight: bold;
@@ -7,7 +7,7 @@
 
 .gameboard {
 	width: auto;
-	height: 400px;
+	height: auto;
 	margin: auto;
 	border: 1px solid black;
 	border-radius: 3%;
@@ -16,8 +16,8 @@
 }
 
 .gamerow {
-	width: 400px;
-	height: 100px;
+	width: auto;
+	height: auto;
 }
 
 .gamecell {
@@ -26,16 +26,8 @@
 	border: 1px solid black;
 	border-radius: 6%;
 	text-align: center;
-	font-size: 35px;
+	font-size: 30px;
 	background-color: grey;
-}
-
-.game-score::before {
-	content: 'SCORE ';
-}
-
-.best-score::before {
-	content: 'BEST ';
 }
 
 /*Cells color by value*/
@@ -83,4 +75,115 @@
 .cell-2048 {
 	color: #f9f6f2;
 	background: #edc22e;
+}
+
+.header {
+	width: 66%;
+	margin: auto;
+	margin-bottom: 0.75%;
+}
+
+.scores {
+	display: flex;
+	float: right;
+	margin-right: 32%;
+	margin-top: 1%;
+	position:relative;
+	border: 2px solid #776e65;
+}
+
+.score-container {
+	background-color: #ffffcc;
+	text-align: center;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-left: 15px;
+	padding-right: 15px;
+	border-right: 2px solid #776e65;
+}
+
+.best-container {
+	border-style: hidden;
+	background-color: #ffffcc;
+	text-align: center;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.gameboard-top {
+	display: flex;
+	justify-content: center;
+}
+
+#newGame {
+	border: 1px;
+	border-radius: 8%;
+	position: right;
+	font-size: 18px;
+	padding: 10px;
+	color: #f9f6f2;
+	background: #edc22e;
+	margin-inline-end: 3%;
+}
+
+#undo-move {
+	border: 1px;
+	border-radius: 8%;
+	font-size: 18px;
+	padding: 10px;
+	color: #f9f6f2;
+	background: #edc22e;
+	font-weight: bold;
+	margin-right: 100px;
+}
+
+.game-timer {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.footer {
+	width: 66%;
+	margin: auto;
+}
+
+.game-rules {
+	margin-top: 5%;
+	text-align: center;
+}
+
+.top-scores {
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	margin-top: 5%;
+	padding-top: 5%;
+	padding-bottom: 5%;
+	text-align: center;
+}
+
+.flop-scores {
+	border-bottom: 1px solid black;
+	margin-top: 5%;
+	padding-bottom: 5%;
+	text-align: center;
+}
+
+h1 {
+	font-size: 500%;
+	margin-left: 32%;
+	width: 25%;
+	margin-bottom: auto;
+}
+
+p {
+	font-size: 125%;
+	margin-left: 32%;
+}
+
+.dbForm {
+	display: none;
 }
