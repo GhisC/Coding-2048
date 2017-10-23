@@ -12,6 +12,38 @@
 
 
 		// ----------------------------------------------------------------
+        // Cookie management
+        // ----------------------------------------------------------------
+
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            }
+            else {
+                var expires = "";
+            }
+            document.cookie = name + "=" + value + expires + "; path=/";
+        }
+
+        function readCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(";");
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == " ") c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        function eraseCookie(name) {
+            createCookie(name, "", -1);
+        }
+
+
+		// ----------------------------------------------------------------
 		// Header creation
 		// Title, game rules, score boxes, new game button
 		// ----------------------------------------------------------------
@@ -23,15 +55,15 @@
 			var score = $('<div class="game-score">0</div>');
 			var bestContainer = $('<div class="best-container">Best</div>');
 			var best = $('<div class="best-score"></div>');
-			var title = '<h1>2048</h1>'+'<p>Join the numbers and get to the 2048 tile!</p>';
-			var top = '<div class="gameboard-top"><div id="newGame">New game</div>' + 
-			'<div class="game-timer">Time 00 : 00</div></div>'
+			var title = "<h1>2048</h1>"+"<p>Join the numbers and get to the 2048 tile!</p>";
+			var top = '<div class="gameboard-top"><div id="newGame">New game</div>' +
+			'<div class="game-timer">Time 00 : 00</div></div>';
 
-			if (readCookie('bestScore') != null) {
-				best.append(readCookie('bestScore'));
+			if (readCookie("bestScore") != null) {
+				best.append(readCookie("bestScore"));
 			}
 			else {
-				best.text('0');
+				best.text("0");
 			}
 			bestContainer.append(best);
 			scoreContainer.append(score);
@@ -49,12 +81,12 @@
 		// ----------------------------------------------------------------
 
 		function generateGrid(width, height) {
-			var gameboard = $('<table></table>').addClass('gameboard');
+			var gameboard = $('<table></table>').addClass("gameboard");
 
 			for (var y = 0; y < height; y++) {
-				var row = $('<tr></tr>').addClass('gamerow');
+				var row = $('<tr></tr>').addClass("gamerow");
 				for (var x = 0; x < width; x++) {
-					var cell = $('<td></td>').addClass('gamecell').attr('x', x).attr('y', y).attr('nbr', 0);
+					var cell = $('<td></td>').addClass("gamecell").attr("x", x).attr("y", y).attr("nbr", 0);
 					row.append(cell);
 				}
 				gameboard.append(row);
@@ -72,7 +104,7 @@
 			// Game rules
 			var footer = $('<div class="footer"></div>');
 			var gameRules = $('<div class="game-rules"></div>');
-			gameRules.text('How to play: Use your arrow keys to move the tiles. When two tiles with the same number touch, they merge into one!');
+			gameRules.text("How to play: Use your arrow keys to move the tiles. When two tiles with the same number touch, they merge into one!");
 			
 			// Leaderboard
 			var leaderboard = $('<div class="leaderboard"></div>');
@@ -85,10 +117,24 @@
 
 			return footer;
 		}
-		$('table').after(generateFooter());
+		$("table").after(generateFooter());
 
 
-		// ----------------------------------------------------------------
+        // ----------------------------------------------------------------
+        // Update classes
+        // Set default cell class and add value specific class
+        // ----------------------------------------------------------------
+
+        function refreshClasses() {
+            $("td").each(function() {
+                var currentValue = $(this).attr("nbr");
+                $(this).removeClass();
+                $(this).addClass("gamecell cell-"+ currentValue);
+            });
+        }
+
+
+        // ----------------------------------------------------------------
 		// Grid initialization
 		// with weighted random numbers
 		// ----------------------------------------------------------------
@@ -98,23 +144,23 @@
 			for (var i = 0 ; i < ((width*width)/8) ; i++) {
 				x.push(Math.floor((Math.random() * width)));
 				y.push(Math.floor((Math.random() * height)));
-				if ((i > 0) && ((x[i] == x[i - 1]) && (y[i] == y[i - 1]))) {
+                var cell = $("td[x='"+x[i]+"'][y='"+y[i]+"']");
+                if ((i > 0) && ((x[i] == x[i - 1]) && (y[i] == y[i - 1]))) {
 					cell.text("");
-					cell.attr('nbr', '0');
+					cell.attr("nbr", "0");
 					refreshClasses();
 					initializeGrid(width);
 				}
 				else {
-					var cell = $("td[x='"+x[i]+"'][y='"+y[i]+"']");
 					if ((Math.floor((Math.random() * 10) + 1)) <= 9) {
 						cell.text("2");
-						cell.attr('nbr', '2');
-						cell.addClass('cell-2');
+						cell.attr("nbr", "2");
+						cell.addClass("cell-2");
 					}
 					else {
 						cell.text("4");
-						cell.attr('nbr', '4');
-						cell.addClass('cell-4');
+						cell.attr("nbr", "4");
+						cell.addClass("cell-4");
 					}
 				}
 			}
@@ -136,7 +182,7 @@
 			var minutes = parseInt(counter / 60) > 9 ? parseInt(counter / 60) : ("0" + parseInt(counter / 60));
 			var seconds = (counter % 60) > 9 ? (counter % 60) : ("0" + (counter % 60));
 			var chronometer = minutes + " : " + seconds;
-			$('.game-timer').text('Time ' + chronometer);
+			$(".game-timer").text("Time " + chronometer);
 		}
 		function startTimer() {
 			timer = setInterval(clock, 1000);
@@ -144,7 +190,7 @@
 		function resetTimer() {
 			clearInterval(timer);
 			counter = 0;
-			$('.game-timer').text('Time 00 : 00');
+			$(".game-timer").text("Time 00 : 00");
 			timerIsOn = false;
 		}
 
@@ -162,22 +208,22 @@
 		// Restart game (button or 'r' key)
 		// ----------------------------------------------------------------
 
-		//Using the 'new game' button
-		$('#newGame').click(function() {
-			restartGame();
-		});
-
 		function restartGame() {
-			$('td').each(function() {
-				$(this).attr('nbr', 0);
-				$(this).text('');
+			$("td").each(function() {
+				$(this).attr("nbr", 0);
+				$(this).text("");
 			});
 			refreshClasses();
 			initializeGrid(width);
 			resetTimer();
 			// importLeaderboard();
-			$('.game-score').text('0');
+			$(".game-score").text("0");
 		}
+
+        //Using the 'new game' button
+        $("#newGame").click(function() {
+            restartGame();
+        });
 
 
 		// ----------------------------------------------------------------
@@ -189,14 +235,14 @@
 			x.push(Math.floor((Math.random() * width)));
 			y.push(Math.floor((Math.random() * height)));
 			var cell = $("td[x='"+x+"'][y='"+y+"']");
-			if (cell.attr('nbr') == 0) {
+			if (cell.attr("nbr") == 0) {
 				if ((Math.floor((Math.random() * 10) + 1)) <= 9) {
 					cell.text("2");
-					cell.attr('nbr', '2');
+					cell.attr('nbr', "2");
 				}
 				else {
 					cell.text("4");
-					cell.attr('nbr', '4');
+					cell.attr("nbr", "4");
 				}
 			}
 			else {
@@ -207,26 +253,12 @@
 
 
 		// ----------------------------------------------------------------
-		// Update classes
-		// Set default cell class and add value specific class
-		// ----------------------------------------------------------------
-
-		function refreshClasses() {
-			$('td').each(function() {
-				var currentValue = $(this).attr('nbr');
-				$(this).removeClass();
-				$(this).addClass('gamecell cell-'+ currentValue);
-			});
-		}
-
-
-		// ----------------------------------------------------------------
 		// Get pressed arrow keys
 		// Call relative slide functions
 		// ----------------------------------------------------------------
 
 		$(document).keydown(function(e) {
-			if (e.which == 37) {
+            if (e.which == 37) {
 				slideLeft();
 			}
 			if (e.which == 38) {
@@ -256,14 +288,14 @@
 				for (var x = 0; x < width; x++) {
 					var currentTD = $("td[x='"+x+"'][y='"+y+"']");
 
-					if (currentTD.attr('nbr') == 0) {
+					if (currentTD.attr("nbr") == 0) {
 						for (var i = (x+1); i < width; i++) {
 							var nextValue = $("td[x='"+i+"'][y='"+y+"']");
-							if (nextValue.attr('nbr') != 0) {
-								currentTD.attr('nbr', nextValue.attr('nbr'));
+							if (nextValue.attr("nbr") != 0) {
+								currentTD.attr("nbr", nextValue.attr("nbr"));
 								currentTD.text(nextValue.text());
-								nextValue.attr('nbr', 0);
-								nextValue.text('');
+								nextValue.attr("nbr", 0);
+								nextValue.text("");
 								x--;
 								movementMade = true;
 								break;
@@ -273,17 +305,17 @@
 					else {
 						for (var i = (x+1); i < width; i++) {
 							var nextValue = $("td[x='"+i+"'][y='"+y+"']");
-							if ((nextValue.attr('nbr') != 0) && (nextValue.attr('nbr') == currentTD.attr('nbr'))) {
-								currentTD.attr('nbr', nextValue.attr('nbr')*2);
+							if ((nextValue.attr("nbr") != 0) && (nextValue.attr("nbr") == currentTD.attr("nbr"))) {
+								currentTD.attr("nbr", nextValue.attr("nbr")*2);
 								currentTD.text(nextValue.text()*2);
-								nextValue.attr('nbr', 0);
-								nextValue.text('');
-								var points = (currentTD.attr('nbr'));
+								nextValue.attr("nbr", 0);
+								nextValue.text("");
+								var points = (currentTD.attr("nbr"));
 								gameScore(points);
 								movementMade = true;
 								break;
 							}
-							else if ((nextValue.attr('nbr') != 0) && (nextValue.attr('nbr') != currentTD.attr('nbr'))) {
+							else if ((nextValue.attr("nbr") != 0) && (nextValue.attr("nbr") != currentTD.attr("nbr"))) {
 								break;
 							}
 						}
@@ -310,14 +342,14 @@
 				for (var x = (width-1); x >= 0; x--) {
 					var currentTD = $("td[x='"+x+"'][y='"+y+"']");
 
-					if (currentTD.attr('nbr') == 0) {
+					if (currentTD.attr("nbr") == 0) {
 						for (var i = (x-1); i >= 0; i--) {
 							var nextValue = $("td[x='"+i+"'][y='"+y+"']");
-							if (nextValue.attr('nbr') != 0) {
-								currentTD.attr('nbr', nextValue.attr('nbr'));
+							if (nextValue.attr("nbr") != 0) {
+								currentTD.attr("nbr", nextValue.attr("nbr"));
 								currentTD.text(nextValue.text());
-								nextValue.attr('nbr', 0);
-								nextValue.text('');
+								nextValue.attr("nbr", 0);
+								nextValue.text("");
 								x++;
 								movementMade = true;
 								break;
@@ -327,17 +359,17 @@
 					else {
 						for (var i = (x-1); i >= 0; i--) {
 							var nextValue = $("td[x='"+i+"'][y='"+y+"']");
-							if ((nextValue.attr('nbr') != 0) && (nextValue.attr('nbr') == currentTD.attr('nbr'))) {
-								currentTD.attr('nbr', nextValue.attr('nbr')*2);
+							if ((nextValue.attr("nbr") != 0) && (nextValue.attr("nbr") == currentTD.attr("nbr"))) {
+								currentTD.attr("nbr", nextValue.attr("nbr")*2);
 								currentTD.text(nextValue.text()*2);
-								nextValue.attr('nbr', 0);
-								nextValue.text('');
+								nextValue.attr("nbr", 0);
+								nextValue.text("");
 								movementMade = true;
-								var points = (currentTD.attr('nbr'));
+								var points = (currentTD.attr("nbr"));
 								gameScore(points);
 								break;
 							}
-							else if ((nextValue.attr('nbr') != 0) && (nextValue.attr('nbr') != currentTD.attr('nbr'))) {
+							else if ((nextValue.attr("nbr") != 0) && (nextValue.attr("nbr") != currentTD.attr("nbr"))) {
 								break;
 							}
 						}
@@ -364,14 +396,14 @@
 				for (var y = 0; y < height; y++) {
 					var currentTD = $("td[x='"+x+"'][y='"+y+"']");
 
-					if (currentTD.attr('nbr') == 0) {
+					if (currentTD.attr("nbr") == 0) {
 						for (var i = (y+1); i < height; i++) {
 							var nextValue = $("td[x='"+x+"'][y='"+i+"']");
-							if (nextValue.attr('nbr') != 0) {
-								currentTD.attr('nbr', nextValue.attr('nbr'));
+							if (nextValue.attr("nbr") != 0) {
+								currentTD.attr("nbr", nextValue.attr("nbr"));
 								currentTD.text(nextValue.text());
-								nextValue.attr('nbr', 0);
-								nextValue.text('');
+								nextValue.attr("nbr", 0);
+								nextValue.text("");
 								y--;
 								movementMade = true;
 								break;
@@ -381,17 +413,17 @@
 					else {
 						for (var i = (y+1); i < height; i++) {
 							var nextValue = $("td[x='"+x+"'][y='"+i+"']");
-							if ((nextValue.attr('nbr') != 0) && (nextValue.attr('nbr') == currentTD.attr('nbr'))) {
-								currentTD.attr('nbr', nextValue.attr('nbr')*2);
+							if ((nextValue.attr("nbr") != 0) && (nextValue.attr("nbr") == currentTD.attr("nbr"))) {
+								currentTD.attr("nbr", nextValue.attr("nbr")*2);
 								currentTD.text(nextValue.text()*2);
-								nextValue.attr('nbr', 0);
-								nextValue.text('');
+								nextValue.attr("nbr", 0);
+								nextValue.text("");
 								movementMade = true;
-								var points = (currentTD.attr('nbr'));
+								var points = (currentTD.attr("nbr"));
 								gameScore(points);
 								break;
 							}
-							else if ((nextValue.attr('nbr') != 0) && (nextValue.attr('nbr') != currentTD.attr('nbr'))) {
+							else if ((nextValue.attr("nbr") != 0) && (nextValue.attr("nbr") != currentTD.attr("nbr"))) {
 								break;
 							}
 						}
@@ -418,14 +450,14 @@
 				for (var y = (height-1); y >= 0; y--) {
 					var currentTD = $("td[x='"+x+"'][y='"+y+"']");
 
-					if (currentTD.attr('nbr') == 0) {
+					if (currentTD.attr("nbr") == 0) {
 						for (var i = (y-1); i >= 0; i--) {
 							var nextValue = $("td[x='"+x+"'][y='"+i+"']");
-							if (nextValue.attr('nbr') != 0) {
-								currentTD.attr('nbr', nextValue.attr('nbr'));
+							if (nextValue.attr("nbr") != 0) {
+								currentTD.attr("nbr", nextValue.attr("nbr"));
 								currentTD.text(nextValue.text());
-								nextValue.attr('nbr', 0);
-								nextValue.text('');
+								nextValue.attr("nbr", 0);
+								nextValue.text("");
 								y++;
 								movementMade = true;
 								break;
@@ -435,17 +467,17 @@
 					else {
 						for (var i = (y-1); i >= 0; i--) {
 							var nextValue = $("td[x='"+x+"'][y='"+i+"']");
-							if ((nextValue.attr('nbr') != 0) && (nextValue.attr('nbr') == currentTD.attr('nbr'))) {
-								currentTD.attr('nbr', nextValue.attr('nbr')*2);
+							if ((nextValue.attr("nbr") != 0) && (nextValue.attr("nbr") == currentTD.attr("nbr"))) {
+								currentTD.attr("nbr", nextValue.attr("nbr")*2);
 								currentTD.text(nextValue.text()*2);
-								nextValue.attr('nbr', 0);
-								nextValue.text('');
+								nextValue.attr("nbr", 0);
+								nextValue.text("");
 								movementMade = true;
-								var points = (currentTD.attr('nbr'));
+								var points = (currentTD.attr("nbr"));
 								gameScore(points);
 								break;
 							}
-							else if ((nextValue.attr('nbr') != 0) && (nextValue.attr('nbr') != currentTD.attr('nbr'))) {
+							else if ((nextValue.attr("nbr") != 0) && (nextValue.attr("nbr") != currentTD.attr("nbr"))) {
 								break;
 							}
 						}
@@ -468,26 +500,26 @@
 
 
 		function saveTable() {
-			var scoreBackup = $('.game-score').text();
-			localStorage.setItem('score', scoreBackup);
+			var scoreBackup = $(".game-score").text();
+			localStorage.setItem("score", scoreBackup);
 
 			// Saving table
 			var tableBackup = [];
-			$('td').each(function() {
+			$("td").each(function() {
 				tableBackup.push($(this).text());
 			});
-			localStorage.setItem('undo', JSON.stringify(tableBackup));
+			localStorage.setItem("undo", JSON.stringify(tableBackup));
 		}
 
 		function undoMove() {
-			var scoreBackup = localStorage.getItem('score');
-			$('.game-score').text(scoreBackup);
+			var scoreBackup = localStorage.getItem("score");
+			$(".game-score").text(scoreBackup);
 
-			var backup = JSON.parse(localStorage.getItem('undo'));
+			var backup = JSON.parse(localStorage.getItem("undo"));
 			var i = 0;
-			$('td').each(function() {
+			$("td").each(function() {
 				$(this).text(backup[i]);
-				$(this).attr('nbr', $(this).text());
+				$(this).attr("nbr", $(this).text());
 				i++;
 			});
 			refreshClasses();
@@ -497,10 +529,9 @@
 			var undo = $('<button id="undo-move">Undo!</button>');
 			return undo;
 		}
-		// $('.gameboard').after(undoButton());
-		$('#newGame').after(undoButton());
+		$("#newGame").after(undoButton());
 
-		$('#undo-move').click(function() {
+		$("#undo-move").click(function() {
 			undoMove();
 		});
 
@@ -512,7 +543,7 @@
 			//Check if all cells are filled
 			var filledCells = 0;
 			$("td").each(function() {
-				if ($(this).attr('nbr') != 0) {
+				if ($(this).attr("nbr") != 0) {
 					filledCells++;
 				}
 			});
@@ -535,8 +566,8 @@
 				}
 				else {
 					// Create cookies for the player's name and score
-					createCookie('playerName', player, 365);
-					var score = $('.game-score').text();
+					createCookie("playerName", player, 365);
+					var score = $(".game-score").text();
 
 					// Save score in the database
 					saveScoreToDB(player, score);
@@ -554,15 +585,15 @@
 
 		function gameWin() {
 			$("td").each(function() {
-				if ($(this).attr('nbr') == 2048) {
+				if ($(this).attr("nbr") == 2048) {
 					var player = prompt("You won! Enter your name bellow and click 'OK' to save your score. You're free to continue this game or start a new one.");
 					if (player == null) {
 						return;
 					}
 					else {
 						//Create cookies for the player's name
-						createCookie('playerName', player, 365);
-						var score = $('.game-score').text();
+						createCookie("playerName", player, 365);
+						var score = $(".game-score").text();
 
 						// Save score in the database
 						saveScoreToDB(player, score);
@@ -580,50 +611,18 @@
 		// ----------------------------------------------------------------
 
 		function gameScore(points = null) {
-			var currentScore = $('.game-score').text();
+			var currentScore = $(".game-score").text();
 			var newScore = parseInt(currentScore) + parseInt(points);
-			if (newScore != 'NaN') {
-				$('.game-score').text(newScore);
+			if (newScore != "NaN") {
+				$(".game-score").text(newScore);
 			}
 
-			if (newScore > readCookie('bestScore')) {
-				createCookie('bestScore', newScore, 365);
-				$('.best-score').text(readCookie('bestScore'));
+			if (newScore > readCookie("bestScore")) {
+				createCookie("bestScore", newScore, 365);
+				$(".best-score").text(readCookie("bestScore"));
 			}
 
 			return newScore;
-		}
-
-
-		// ----------------------------------------------------------------
-		// Cookie management
-		// ----------------------------------------------------------------
-
-		function createCookie(name, value, days) {
-			if (days) {
-				var date = new Date();
-				date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-				var expires = "; expires=" + date.toGMTString();
-			}
-			else {
-				var expires = "";
-			}
-			document.cookie = name + "=" + value + expires + "; path=/";
-		}
-
-		function readCookie(name) {
-			var nameEQ = name + "=";
-			var ca = document.cookie.split(';');
-			for (var i = 0; i < ca.length; i++) {
-				var c = ca[i];
-				while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-				if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-			}
-			return null;
-		}
-
-		function eraseCookie(name) {
-			createCookie(name, "", -1);
 		}
 
 
@@ -635,7 +634,7 @@
 			var data = [player, score];
 			data =JSON.stringify(data);
 			$.ajax({
-				url: "insert.php",
+				url: "js/insert.php",
 				type: "post",
 				dataType: "JSON",
 				data: {"insert": data},
@@ -653,27 +652,27 @@
 		function importLeaderboard() {
 			//Import top scores
 			$.ajax({
-				url: 'import_top.php',
-				type: 'GET',
+				url: "js/import_top.php",
+				type: "GET",
 				dataType: "json",
 			}).done(function(data) {
-				$('.top-scores').text('');
-				$('.top-scores').append('Top 10 scores:<br/><br/>');
+				$('.top-scores').text("");
+				$('.top-scores').append("Top 10 scores:<br/><br/>");
 				for (var i = 0; i < data.length; i++) {
-					$('.top-scores').append((i+1)+'- '+data[i]['player']+' scored '+data[i]['score']+' points! ('+data[i]['created_at']+')<br/>');
+					$('.top-scores').append((i+1)+"- "+data[i]["player"]+" scored "+data[i]["score"]+" points! ("+data[i]["created_at"]+")<br/>");
 				}
 			});
 
 			//Import flop scores
 			$.ajax({
-				url: 'import_flop.php',
-				type: 'GET',
+				url: "js/import_flop.php",
+				type: "GET",
 				dataType: "json",
 			}).done(function(data) {
-				$('.flop-scores').text('');
-				$('.flop-scores').append('Worst 10 scores:<br/>Because being the best at loosing is awesome<br/><br/>');
+				$('.flop-scores').text("");
+				$('.flop-scores').append("Worst 10 scores:<br/>Because being the best at loosing is awesome<br/><br/>");
 				for (var i = 0; i < data.length; i++) {
-					$('.flop-scores').append((i+1)+'- '+data[i]['player']+' scored '+data[i]['score']+' points! ('+data[i]['created_at']+')<br/>');
+					$('.flop-scores').append((i+1)+"- "+data[i]["player"]+" scored "+data[i]["score"]+" points! ("+data[i]['created_at']+")<br/>");
 				}
 			});
 		}

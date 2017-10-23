@@ -95,10 +95,7 @@ body {
 .score-container {
 	background-color: #ffffcc;
 	text-align: center;
-	padding-top: 15px;
-	padding-bottom: 15px;
-	padding-left: 15px;
-	padding-right: 15px;
+	padding: 15px;
 	border-right: 2px solid #776e65;
 }
 
@@ -106,10 +103,7 @@ body {
 	border-style: hidden;
 	background-color: #ffffcc;
 	text-align: center;
-	padding-top: 15px;
-	padding-bottom: 15px;
-	padding-left: 15px;
-	padding-right: 15px;
+	padding: 15px;
 }
 
 .gameboard-top {
@@ -140,10 +134,7 @@ body {
 }
 
 .game-timer {
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-left: 15px;
-	padding-right: 15px;
+	padding: 15px;
 }
 
 .footer {
